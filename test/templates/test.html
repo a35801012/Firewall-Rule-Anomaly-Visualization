@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+
+<div id="container" style="height: 400px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+
+<title></title>
+</head>
+<body>
+        <script type='text/javascript'>
+    var chart = Highcharts.chart('container', {
+
+            chart: {
+                type: 'heatmap',
+                zoomType: 'xy',
+
+            },
+
+            title: {
+                text: 'firewall'
+            },
+
+            xAxis: {
+				title: {
+                    enabled: true,
+                    text: 'Source Address'
+                },
+				labels: { formatter: function () { return ipConvertor(this.value); } },
+				floor: 0,
+				ceiling: 4294967295,
+			},
+
+			yAxis: {
+				title: {
+                    enabled: true,
+                    text: 'Destination Address'
+                },
+				labels: { formatter: function () { return ipConvertor(this.value); } },
+				floor: 0,
+				ceiling: 4294967295,
+			},
+
+            tooltip: {
+                followPointer: true,
+                useHTML: true,
+                headerFormat: `<div class="center" style="font-size: 14px; font-weight: bold">{series.name}</div></hr><div><table>`,
+                footerFromat: '</table></div>',
+                pointFormatter: function () {
+                    var str =	`<tr><td>Src:&#160;</td>\
+                                    <td>${ipConvertor(this.series.xData[0])}</td>\
+                                    <td>&#160;~&#160;</td>\
+                                    <td>${ipConvertor(this.series.xData[1])}</td>\
+                                </tr>\
+                                <tr>\
+                                    <td>Dest:&#160;</td>\
+                                    <td>${ipConvertor(this.low)}</td>\
+                                    <td>&#160;~&#160;</td>\
+                                    <td>${ipConvertor(this.high)}</td>\
+                                </tr>`;
+
+                    return str;
+                },
+            },
+
+            legend: {
+                enabled: true
+            },plotOptions: {
+                series: {
+                    stickyTracking: true,
+                    trackByArea: true,
+                    showInLegend: true,
+                    fillOpacity: 0.5,
+                    lineWidth: 0.5,
+                    marker: { enabled: false, states: { hover: { enabled: false } } },
+                    cursor: 'pointer',
+
+                }
+            },
+
+            series: [ ]
+
+        });
+
+        seriesData = [{
+            name: 'block0',
+            color:'#90ed7d',
+            data: [{high:50331647,low:33554432,x:16777216},{high:50331647,low:33554432,x:33554431}],destination:[{end:'2.255.255.255',start:'2.0.0.0'}],source:[{end:'1.255.255.255',start:'1.0.0.0'}],type:'arearange',
+            trackByArea: true ,
+         showInLegend: true
+        },{
+            name:'block1',
+            color:'#90ed7d',
+            data:[{high:33554431,low:16777216,x:33554432},{high:33554431,low:16777216,x:50331647}],destination:[{end:'2.255.255.255',start:'2.0.0.0'}],source:[{end:'1.255.255.255',start:'1.0.0.0'}],type:'arearange',trackByArea: true
+            ,showInLegend: true
+        },{
+            name:'block2',
+            color:'#f45b5b',
+            data:[{high:50331647,low:16777216,x:33554432},{high:50331647,low:16777216,x:41943039}],destination:[{end:'1.255.255.255',start:'1.0.0.0'}],source:[{end:'2.255.255.255',start:'2.0.0.0'}],type:'arearange',trackByArea: true ,
+            showInLegend: true
+        }]
+
+
+        console.log(seriesData);
+
+
+        var diff = chart.series.length - seriesData.length;
+        if(diff > 0){
+            for (var i = chart.series.length; i > diff; i--){
+              chart.series[i-1].remove(true);
+          }
+        } else if (diff < 0){
+            for (var i = chart.series.length; i < seriesData.length; i ++){
+              chart.addSeries({});
+          }
+        }
+
+        chart.update({
+            series:seriesData
+        });
+
+
+
+
+/*
+{
+    name:'block2',
+    color:'#f45b5b',
+    data:[{high:50331647,low:16777216,x:33554432},{high:50331647,low:16777216,x:41943039}],destination:[{end:'1.255.255.255',start:'1.0.0.0'}],source:[{end:'2.255.255.255',start:'2.0.0.0'}],type:'arearange',trackByArea: true ,
+    showInLegend: true
+}
+*/
+
+
+  function ipConvertor ( ipData ) {
+    if ( !isNaN(ipData) ) {
+        let Quotient = [],
+            Remainder = [];
+
+        Quotient[0] = ipData;
+        for (var i = 0; i < 4; i++) {
+            Remainder[i] = Math.floor( Quotient[i] % 256 );
+            Quotient[i+1] = Math.floor( Quotient[i] / 256 );
+        }
+
+        let mask = Remainder[3];
+        for (var i = 2; i >= 0; i--)
+            mask = mask + '.' + Remainder[i];
+        return mask;
+    } else {
+        let ipSplit = ipData.trim().split('.');
+        return ( ( ((+ipSplit[0]) * 256) + (+ipSplit[1]) ) * 256 + (+ipSplit[2]) ) * 256 + (+ipSplit[3]);
+    }
+}
+</script>
+</body>
+</html>

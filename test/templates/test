@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+<figure class="highcharts-figure">
+    <div id="container" style="height: 400px; min-width: 310px; max-width: 800px; margin: 0 auto"></div>
+
+    <p class="highcharts-description">
+        TEST
+    </p>
+</figure>
+
+
+
+<title></title>
+</head>
+<TABLE BORDER=1>
+    <TR><TD><font size=4>Router IP : </font></TD><TD><b><font size=4>{{addr[0]}}</font></b></TD></TR>
+    <TR><TD><font size=4>Router Port : </font></TD><TD><b><font size=4>{{addr[1]}}</font></b></TD></TR>
+    </TABLE>
+    <input type="button" value="修改防火牆" style="width:120px;height:30px;font-size:16px;background-color:#CCEEFF;" onclick="location.href='http://192.168.0.104:10000/'">
+    <input type="button" value="返回" style="width:80px;height:30px;font-size:16px;background-color:#CCEEFF;" onclick="location.href='./'">
+<body>
+
+
+  <script type='text/javascript'>
+
+
+
+function getPointCategoryName(point, dimension) {
+    var series = point.series,
+        isY = dimension === 'y',
+        axis = series[isY ? 'yAxis' : 'xAxis'];
+    return axis.categories[point[isY ? 'y' : 'x']];
+}
+
+Highcharts.chart('container', {
+
+    chart: {
+        type: 'heatmap',
+        zoomType: 'xy',
+        marginTop: 40,
+        marginBottom: 80,
+       // plotBorderWidth: 1
+    },
+
+
+    title: {
+        text: 'Anomalies Between The Rules'
+    },
+
+    xAxis: {
+        min:0,
+        max: 10
+
+    },
+
+    yAxis: {
+        title: null,
+        max:20,
+        min:0
+        //reversed: true
+    },
+
+    accessibility: {
+        point: {
+            descriptionFormatter: function (point) {
+                var ix = point.index + 1,
+                    xName = getPointCategoryName(point, 'x'),
+                    yName = getPointCategoryName(point, 'y'),
+                    val = point.value;
+                return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
+            }
+        }
+    },
+
+ colorAxis: {
+                    dataClasses: [{
+                        to: 0,
+                        color: '#8afb79',
+                        name: 'Accepted'
+                    }, {
+                        from: 1,
+                        to:   1,
+                        color: '#C48888',
+                        name: 'Denied'
+                    }, {
+                        from: 2,
+                        to:   2,
+                        color: '#FF2D2D',
+                        name: 'Correlated'
+                    }, {
+                        from: 3,
+                        to:   3,
+                        color: '#FF95CA',
+                        name: 'Shadowed'
+                    }, {
+                        from: 4,
+                        to:   4,
+                        color: '#FF9224',
+                        name: 'General'
+                    }, {
+                        from: 5,
+                        to:   5,
+                        color: '#FFDC35',
+                        name: 'Redundant'
+                    }]
+                },
+/*
+    legend: {
+        align: 'right',
+        layout: 'vertical',
+        margin: 0,
+        verticalAlign: 'top',
+        y: 50,
+        symbolHeight: 280
+    },
+*/
+    tooltip: {
+        formatter: function () {
+            return '<b>' + this.point.x+ ' </b>,<b>' +	this.point.y
+                 + '</b><br><b>' + this.point.name + '</b>';
+        }
+    },
+
+
+
+    series: [{
+        name: 'Sales per employee',
+       // borderWidth: 1,
+        data: [
+        [2,11,0],[3,11,0],[4,11,0],[5,11,0],[6,11,0],[7,11,0],[8,11,0],[9,11,0],[10,11,0],
+        [3,20,0],[3,19,0],[3,18,0],[3,17,0],[3,16,0],[3,15,0],[3,14,0],[3,13,0],[3,12,0],[3,11,0],[3,10,0],[3,9,0],[3,8,4],[3,7,0],[3,6,0],
+        [5,20,1],[5,19,1],[5,18,1],[5,17,1],[5,16,1],[5,15,1],[5,14,1],[5,13,1],[5,12,1],[5,11,3],[5,10,1],[5,9,1],[5,8,1],[5,7,2],[5,6,1],
+        [7,20,1],[7,19,1],[7,18,1],[7,17,1],[7,16,1],[7,15,1],[7,14,1],[7,13,1],[7,12,1],[7,11,1],[7,10,1],[7,9,1],[7,8,1],[7,7,1],[7,6,1],
+        [9,20,0],[9,19,0],[9,18,0],[9,17,5],[9,16,0],[9,15,0],[9,14,0],[9,13,0],[9,12,0],[9,11,0],[9,10,0],[9,9,0],[9,8,0],[9,7,0],[9,6,0],
+
+        ],
+        dataLabels: {
+          //  enabled: true,
+            color: '#000000'
+        }
+    }],
+
+    responsive: {
+        rules: [{
+            condition: {
+                maxWidth: 500
+            },
+            chartOptions: {
+                yAxis: {
+                    labels: {
+                        formatter: function () {
+                            return this.value.charAt(0);
+                        }
+                    }
+                }
+            }
+        }]
+    }
+
+});
+
+      </script>
+</body>
+</html>

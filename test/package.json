@@ -1,0 +1,37 @@
+{
+  "name": "test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "sankey.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.16.0",
+    "esm": "^3.2.25",
+    "flask": "^0.2.10",
+    "jquery": "^3.6.0",
+    "jsdom": "^17.0.0",
+    "save": "^2.4.0",
+    "video.js": "^7.15.4",
+    "videojs-abloop": "^1.2.0"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.16.0",
+    "@babel/preset-env": "^7.16.0",
+    "babel-loader": "^8.2.3",
+    "webpack": "^5.62.2",
+    "webpack-cli": "^4.9.1"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "webpack --mode development",
+    "watch": "webpack --watch --mode development",
+    "deploy": "webpack --mode production",
+    "babel": "./node_modules/.bin/babel",
+    "build": "npm run babel sankey_webpack.js -- --out-file sankey_bb.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}

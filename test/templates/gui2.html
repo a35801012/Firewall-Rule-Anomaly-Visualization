@@ -1,0 +1,119 @@
+
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+
+<div id="container" style="min-width: 410px; height:430px; max-width: 1450px; margin: 0 auto"></div>
+<html>
+  <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  
+                  
+  </head>
+    <TABLE BORDER=1>
+    <TR><TD><font size=4>Router IP : </font></TD><TD><b><font size=4>{{addr[0]}}</font></b></TD></TR>
+    <TR><TD><font size=4>Router Port : </font></TD><TD><b><font size=4>{{addr[1]}}</font></b></TD></TR>
+    </TABLE>
+    <input type="button" value="修改防火牆" style="width:120px;height:30px;font-size:16px;background-color:#CCEEFF;" onclick="location.href='http://192.168.0.104:10000/'">
+    <input type="button" value="返回" style="width:80px;height:30px;font-size:16px;background-color:#CCEEFF;" onclick="location.href='./'"><br>
+    
+    <input type="checkbox" name="mycheck" onclick='myFunction()'>顯示兩個anomaly  
+<script>
+
+
+    function myFunction(){
+        let checked = document.querySelector('[name=mycheck]:checked');
+        if (checked) {
+            
+            window.location.reload();
+        } else {
+            alert("NOT OK");
+        }
+    }
+</script>
+    
+
+    <body>
+      <img src="static/label.jpg" style="position:absolute;top:150px;left:950px;" />  
+      <script type='text/javascript'>
+       
+        var leng='{{leng}}'      
+        var data1={{data1|tojson}}
+        var data2={{data2|tojson}}
+        var col={{col|tojson}}
+        var anom={{anom|tojson}}
+        var xsip={{xsip|tojson}}
+        var ysip={{ysip|tojson}}
+        var xdip={{xdip|tojson}}
+        var ydip={{ydip|tojson}}
+        var xpro={{xpro|tojson}}
+        var ypro={{ypro|tojson}}
+
+        var xxx=[]
+        // xxx=[{name:'{{data[0]}}',y:1},{name:leng,y:1}]
+        for (var i=0;i<leng;i++){
+            xxx[xxx.length]={name:data1[i]+'&'+data2[i],y:1,color:col[i],d1:data1[i],d2:data2[i],anomaly:anom[i],sipx:xsip[i],sipy:ysip[i],dipx:xdip[i],dipy:ydip[i],prox:xpro[i],proy:ypro[i]}
+        }
+   
+      Highcharts.chart('container', {
+    chart: {
+      //plotBackgroundColor:'#FFCCCC',
+      plotBackgroundColor:'#CCEEFF',
+      plotBorderWidth: null,
+      plotShadow: false,
+      type: 'pie'
+    },
+    title: {
+      useHTML:true,
+      text: '<font size=6>Anomalys Between The Rules</font>'
+    },
+    
+    tooltip: {
+      // pointFormat: '{series.name}: aaa'
+      borderRadius: 10,
+      borderWidth: 2 ,
+      // shared: true, 
+      useHTML:true,
+      positioner: function() {
+  return {
+    x: 12,
+    y: 320
+    // x: this.chart.plotLeft,
+    // y: this.chart.plotTop
+  };
+}, 
+    // headerFormat:'',
+    pointFormat: '<font size=4><b>{series.name}：{point.anomaly}</b></font><table><tr style="color :red"><td>{point.d1}</td>'+'<td>Sip={point.sipx}</td>'+'<td>Dip={point.dipx}</td>'+'<td>Protocol={point.prox}</td></tr>'+'<tr style="color :blue"><td>{point.d2}</td>'+'<td>Sip={point.sipy}</td>'+'<td>Dip={point.dipy}</td>'+'<td>Protocol={point.proy}</td></tr></table>',
+    // footFormat:'</table>',
+    // valueDecimals:2
+    },
+    plotOptions: {
+      pie: {       
+        allowPointSelect: true,
+        cursor: 'pointer',
+        dataLabels: {
+          useHTML:true,
+          enabled: true,
+          format: '<font size=3>{point.name}</font>'
+        }
+      }
+    },
+
+    // series: [{
+    //   name: 'Anomaly',colorByPoint: true
+    // }]
+    series: [{name: 'Anomaly',
+      // data: [{name:'{{cara}}',y: 1},{name:'{{cara}}',y: 1}]
+      data: xxx
+            }]
+  });
+      
+      </script>
+  
+      <!-- <a href="https://www.youtube.com/">{{data}}</a> -->
+        
+    </body>
+<html>
+

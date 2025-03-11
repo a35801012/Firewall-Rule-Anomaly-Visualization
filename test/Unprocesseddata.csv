@@ -1,0 +1,14 @@
+A_R0,R2,lightskyblue,Shadowed,192.10.0.0/16,0.0.0.0/0,192.10.10.0/24,0.0.0.0/0,tcp,tcp
+R0,R8,yellow,Correlated,192.10.0.0/16,0.0.0.0/0,192.10.10.10/24,0.0.0.0/0,tcp,all
+R0,R16,lightskyblue,Shadowed,192.10.0.0/16,0.0.0.0/0,192.10.0.0/16,0.0.0.0/0,tcp,tcp
+R2,R3,yellow,Correlated,192.10.10.0/24,0.0.0.0/0,192.10.10.1/10,0.0.0.0/0,tcp,all
+R2,R7,lightskyblue,Shadowed,192.10.10.0/24,0.0.0.0/0,192.10.10.10/16,0.0.0.0/0,tcp,tcp
+R2,R9,yellow,Correlated,192.10.10.0/24,0.0.0.0/0,192.10.10.15/13,0.0.0.0/0,tcp,all
+R3,R16,yellow,Correlated,192.10.10.1/10,0.0.0.0/0,192.10.0.0/16,0.0.0.0/0,all,tcp
+R4,R5,lightskyblue,Shadowed,170.192.0.0/16,0.0.0.0/0,170.192.0.0/16,0.0.0.0/0,tcp,tcp
+R9,R16,yellow,Correlated,192.10.10.15/16,0.0.0.0/0,192.10.0.0/16,0.0.0.0/0,all,tcp
+R11,R13,lightskyblue,Shadowed,140.0.0.0/8,0.0.0.0/0,140.220.0.0/16,0.0.0.0/0,udp,udp
+R11,R19,yellow,Correlated,140.0.0.0/8,0.0.0.0/0,140.192.30.0/24,0.0.0.0/0,udp,all
+R12,R13,lightskyblue,Shadowed,140.0.0.0/8,0.0.0.0/0,140.220.0.0/16,0.0.0.0/0,udp,udp
+R12,R19,yellow,Correlated,140.0.0.0/8,0.0.0.0/0,140.192.30.0/24,0.0.0.0/0,udp,all
+R17,R18,lightskyblue,Shadowed,160.0.0.0/8,0.0.0.0/0,160.30.0.0/16,0.0.0.0/0,all,all

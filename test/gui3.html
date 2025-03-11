@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="https://code.highcharts.com/highcharts.js"></script>
+<script src="https://code.highcharts.com/modules/heatmap.js"></script>
+<script src="https://code.highcharts.com/modules/exporting.js"></script>
+<script src="https://code.highcharts.com/modules/export-data.js"></script>
+<script src="https://code.highcharts.com/modules/accessibility.js"></script>
+<script src="https://code.highcharts.com/highcharts-more.js"></script>
+    <script type="text/javascript" src="/sankey.js"></script>
+    <script src = "sankey.js"></script>
+    <script type="module">
+
+    </script>
+
+    <figure class="highcharts-figure">
+    <div id="container"></div>
+
+    <div style="text-align:right"> <font size="7"><em><u><span style="font-family:fantasy;" id='Anomaly' > </span></u></em></font></div>
+    <br></br>
+    <div> SIP: <span id='x-value'>0</span></div>
+    <div>DIP: <span id='y-value'>0</span></div>
+    <p class="highcharts-description">
+        透過此圖可以更精確地觀察到
+
+
+    </p>
+</figure>
+    </head>
+<script type="module">
+
+
+
+
+</script>
+
+
+<body>
+
+
+
+
+
+  <script type='text/javascript'>
+
+/*匯入變數*/
+var A = localStorage.getItem("A");
+var B = localStorage.getItem("B");
+var anomaly = localStorage.getItem("anomaly");
+
+/*將陣列資料進行切割*/
+var AA = A.split(",",6);
+var BB = B.split(",",6);
+
+/*將資料轉為heatmap所需的陣列型態*/
+const array1 = [{Xaxis: (ip2num(AA[0])),
+                    Yaxis_Max:(ip2num(AA[1])),
+                    Yaxis_min:(ip2num((AA[2])))},
+                    {Xaxis:(ip2num(AA[3])),
+                        Yaxis_Max:(ip2num(AA[4])),
+                        Yaxis_min:(ip2num(AA[5]))}]
+                        data1 = array1.map(test1 => Array.from(Object.values(test1)));
+                        
+/*將資料轉為heatmap所需的陣列型態*/
+const array2 = [{Xaxis:(ip2num(BB[0])),
+                    Yaxis_Max:(ip2num(BB[1])),
+                    Yaxis_min:(ip2num((BB[2])))},
+                    {Xaxis:(ip2num(BB[3])),
+                        Yaxis_Max:(ip2num(BB[4])),
+                        Yaxis_min:((ip2num(BB[5])))}]
+
+                        data2 = array2.map(test2 => Array.from(Object.values(test2)));
+
+
+$('#Anomaly').text(anomaly) /*將要檢視之異常回傳至HTML*/
+
+    // ip functions
+    function ip2num(ip) { /*ip轉數字的函式*/
+        var d = ip.split('.');
+        return ((((((+d[0]) * 256) + (+d[1])) * 256) + (+d[2])) * 256) + (+d[3]);
+    }
+
+    function num2ip(num) { /*數字轉ip的函式*/
+        var d = num % 256;
+        for (var i = 3; i > 0; i--) {
+            num = Math.floor(num / 256);
+            d = num % 256 + '.' + d;
+        }
+        return d;
+    }
+
+$( document ).ready(function() {
+$('#container').bind('mousemove', function(e) {
+    /*指定目標為highchart的視覺化*/
+    var chart = $(this).highcharts();
+    var position;
+
+    /*追蹤滑鼠游標的位置*/
+    e = chart.pointer.normalize(e); 
+        position = chart.fromPointToLocatLon
+    /*將滑鼠的X軸和Y軸的位置讀出來並省略小數點後回傳HTML*/    
+    $('#x-value').text(function(){
+    		return	num2ip (chart.xAxis[0].toValue(e.chartX).toFixed(0))}),
+    $('#y-value').text(function(){
+    		return	num2ip (chart.yAxis[0].toValue(e.chartY).toFixed(0))});
+  });
+
+
+});
+
+
+
+
+Highcharts.chart('container', {
+  chart: {
+    type: 'heatmap', /*選擇視覺化的類型*/
+    zoomType: 'xy', /*開啟zoom in/zoom out 功能*/
+    /*邊界設定*/
+    marginTop: 40,  
+    marginBottom: 80,
+
+    // plotBorderWidth: 1
+  },
+
+
+  title: { /*標題*/
+    text: 'Anomalies Between The Rules'
+  },
+
+  xAxis: {
+  title:{
+                    "text": "SIP" /*給予X軸名稱*/
+                },
+                /*十字線的X軸設定*/
+  crosshair: { 
+                zIndex: 5,
+                dashStyle: 'dot',
+                snap: false,
+                color: 'gray'
+            },
+            /*透過函式將數字轉乘ip*/
+  labels: { 
+                formatter: function () {
+                return num2ip(this.value);
+                    }
+                },
+								endOnTick: false ,
+
+  },
+
+  yAxis: {
+      /*十字線的Y軸設定*/
+  crosshair: {
+                zIndex: 5,
+                dashStyle: 'dot',
+                snap: false,
+                color: 'gray'
+            },
+            /*透過函式將數字轉乘ip*/
+      labels: {
+                formatter: function () {
+                return num2ip(this.value);
+                    },
+                    },
+      title:{ /*給予Y軸名稱*/
+                    "text": "DIP"
+                },
+			endOnTick: false ,
+    //reversed: true
+  },
+  /*
+      accessibility: {
+          point: {
+              descriptionFormatter: function (point) {
+                  var ix = point.index + 1,
+                      xName = getPointCategoryName(point, 'x'),
+                      yName = getPointCategoryName(point, 'y'),
+                      val = point.value;
+                  return ix + '. ' + xName + ' sales ' + yName + ', ' + val + '.';
+              }
+          }
+      },
+  */
+
+  /*
+      legend: {
+          align: 'right',
+          layout: 'vertical',
+          margin: 0,
+          verticalAlign: 'top',
+          y: 50,
+          symbolHeight: 280
+      },
+  */
+
+
+  tooltip: { 
+    enabled: false /*將tooltip關閉*/
+    /*
+           formatter: function () {
+               return '<b>' + this.point.x+ ' </b>,<b>' +	this.point.y
+                    + '</b><br><b>' + this.point.name + '</b>';
+
+
+           },
+
+           positioner: function () {
+               return { x: 80, y: 0 };
+           },
+           shadow: false,
+           borderWidth: 0,
+           backgroundColor: 'transparent'
+      */
+  },
+
+
+
+  series: [{ /*讀入資料之設定*/
+      name: 'R0',
+      data:data1,
+      type: 'arearange',
+      lineWidth: 0,
+      color: '#8afb79',
+      linkedTo: ':previous',
+      fillOpacity: 0.5,
+      zIndex: 0,
+      marker: {
+        enabled: false
+      },
+    }, {
+      name: 'R1',
+      data:data2,
+      type: 'arearange',
+      lineWidth: 0,
+      color: '#C48888',
+      linkedTo: ':previous',
+      fillOpacity: 0.5,
+      zIndex: 0,
+      marker: {
+        enabled: false
+      },
+    },
+
+
+  ],
+
+});
+
+
+      </script>
+</body>
+
+</html>
